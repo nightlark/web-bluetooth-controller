@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Placeholder Controller</title>
+    <style>
+        :root {
+            color-scheme: light dark;
+        }
+    </style>
+</head>
+<body>
+    <h1>Placeholder Controller</h1>
+    <h4>
+        <a href="url to github repo goes here" target="_blank" style="text-decoration: none; color: inherit;">
+            <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" alt="GitHub Logo" width="20" style="vertical-align: middle;">
+            <span style="vertical-align: middle;">View on GitHub</span>
+        </a>
+    </h4>
+    <button id="connectBtn">Connect to Placeholder</button>
+    <div id="status"></div>
+    <div id="info">
+        <!-- Characteristic values read/notifications from the BLE device go here -->
+        <!-- Probably just a bunch of HTML span elements with id set, for javascript code to write values to -->
+        <!-- Some may have clickable text boxes for writing custom values back to the characteristic -->
+    </div>
+
+    <!-- Custom animation/visualization stuff could go here, along with custom web page elements for configuring device settings -->
+    <!-- There could also be custom controls here, such as a "controller-like" game pad if appropriate for the device being controlled -->
+
+    <script>
+        // JavaScript code to get spans and buttons by HTML ID, and initialize variables for BLE device and characteristics goes here
+
+        let placeholderDevice = null;
+
+        connectBtn.addEventListener('click', async () => {
+            try {
+                const options = {
+                    filters: [
+                        // Filters for the specific device(s) you want to connect to
+                        // Include at least one of the following: name, namePrefix, or services (a list of service UUID strings)
+                        // eg: { name: 'My BLE Device' }
+                        // eg: { namePrefix: 'Device_' }
+                        // eg: { services: ['0000180a-0000-1000-8000-00805f9b34fb'] }
+                    ]
+                };
+
+                console.log("Requesting Bluetooth device...");
+                statusDiv.textContent = "Requesting Bluetooth device...";
+
+                placeholderDevice = await navigator.bluetooth.requestDevice(options);
+                const server = await placeholderDevice.gatt.connect();
+
+                console.log('> Device Name:', placeholderDevice.name);
+                console.log('> Device ID:', placeholderDevice.id);
+                statusDiv.textContent = `Connected to ${placeholderDevice.name}`;
+
+                // Get the primary service and characteristics of the BLE device
+                // Add event listeners for characteristicvaluechanged events for ones supporting notifications
+                // Call a function to read initial values of characteristics that support reading
+                // Call startNotifications() for characteristics supporting notifications using await
+                // For write characteristics, write initial values if needed
+
+            } catch (error) {
+                console.error('Error:', error);
+                statusDiv.textContent = `Error: ${error.message} (See console for details; make sure your browser supports Web Bluetooth, e.g. Chrome)`;
+            }
+        });
+
+        // Put async functions here for reading initial values of characteristics
+
+        // Put event listeners for characteristicvaluechanged events here
+
+        // Put callback functions for button clicks or text box changes here (for text box entry, a button click or Enter key press should trigger the write -- otherwise the old value should be retained)
+
+        // Put helper functions for updating the information displayed, as well as transforming input data into the format/bytes that characteristics expect here
+
+        // If there are values considered "configuration" for a device, there should be a way to save/load them to/from localStorage, potentially with options for exporting/importing them as text strings or naming different profiles
+
+        window.onload = () => {
+            // Do anything that needs to be done when the page is loaded here, such as loading an initial configuration profile from localStorage
+        };
+    </script>
+</body>
+</html>
